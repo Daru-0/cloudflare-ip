@@ -3,8 +3,11 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
+    
+env:
+  IMAGE_NAME: cfautoupdater
 
 jobs:
 
@@ -21,14 +24,23 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-        
+    
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
       
-    - name: Build and push
+    - name: Extract Docker metadata
+      id: meta
+      uses: docker/metadata-action@v2
+      with:
+        images: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}
+        
+    - name: Build and Push Versioned Docker Image
+      id: build-and-push
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/cfautoupdater:latest
+        tags: |
+          ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          {{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
