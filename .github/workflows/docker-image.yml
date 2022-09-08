@@ -38,8 +38,8 @@ jobs:
       uses: docker/metadata-action@v2
       with:
         images: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}
-        flavor:
-          latest:auto
+        flavor: |
+          latest=auto
         tags: |
           type=ref,event=branch
           type=ref,event=tag
