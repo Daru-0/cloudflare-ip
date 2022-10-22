@@ -49,9 +49,9 @@ main() {
         exit 1
     fi
 
-    IS_SEND_ADD_NULL = expr "$SENDER_ADDRESS" : '' >/dev/null
-    IS_SEND_PSW_NULL = expr "$SENDER_PASSWORD" : '' >/dev/null
-    IS_RECE_ADD_NULL = expr "$RECEIVER_ADDRESS" : '' >/dev/null
+    if [ -z "$SENDER_ADDRESS" ]; then IS_SEND_ADD_NULL=true; else IS_SEND_ADD_NULL=false
+    if [ -z "$SENDER_PASSWORD" ]; then IS_SEND_PSW_NULL=true; else IS_SEND_PSW_NULL=false
+    if [ -z "$RECEIVER_ADDRESS" ]; then IS_RECE_ADD_NULL=true; else IS_RECE_ADD_NULL=false
     
     if (( ! IS_SEND_ADD_NULL && ! IS_SEND_PSW_NULL && ! IS_RECE_ADD_NULL ) || ( IS_SEND_ADD_NULL && IS_SEND_PSW_NULL && IS_RECE_ADD_NULL )); then
         if [ IS_SEND_ADD_NULL ]; then
