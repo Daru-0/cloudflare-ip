@@ -67,8 +67,8 @@ main() {
 	IS_RECE_ADD_NULL=false
     fi
     
-    if (( ! IS_SEND_ADD_NULL && ! IS_SEND_PSW_NULL && ! IS_RECE_ADD_NULL ) || ( IS_SEND_ADD_NULL && IS_SEND_PSW_NULL && IS_RECE_ADD_NULL )); then
-        if [ IS_SEND_ADD_NULL ]; then
+    if (( ! $IS_SEND_ADD_NULL && ! $IS_SEND_PSW_NULL && ! $IS_RECE_ADD_NULL ) || ( $IS_SEND_ADD_NULL && $IS_SEND_PSW_NULL && $IS_RECE_ADD_NULL )); then
+        if [ $IS_SEND_ADD_NULL ]; then
             echo "[INFO] - SENDER_ADDRESS null, will not send email"
         fi
         echo "[INFO] - SENDER_ADDRESS, SENDER_PASSWORD and RECEIVER_ADDRESS ok"
