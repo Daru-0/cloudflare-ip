@@ -49,33 +49,39 @@ main() {
         exit 1
     fi
 
-    if [ -z "$SENDER_ADDRESS" ]; then 
-	IS_SEND_ADD_NULL=true
+    if [ -z "$SENDER_ADDRESS" && -z "$SENDER_PASSWORD" && -z "$RECEIVER_ADDRESS" ]; then 
+	echo "[INFO] - SENDER_ADDRESS null, will not send email"
     else 
-	IS_SEND_ADD_NULL=false
+	echo "[INFO] - SENDER_ADDRESS, SENDER_PASSWORD and RECEIVER_ADDRESS ok"
     fi
     
-    if [ -z "$SENDER_PASSWORD" ]; then
-	IS_SEND_PSW_NULL=true
-    else
-	IS_SEND_PSW_NULL=false
-    fi
-
-    if [ -z "$RECEIVER_ADDRESS" ]; then
-	IS_RECE_ADD_NULL=true
-    else
-	IS_RECE_ADD_NULL=false
-    fi
-    
-    if (( ! $IS_SEND_ADD_NULL && ! $IS_SEND_PSW_NULL && ! $IS_RECE_ADD_NULL ) || ( $IS_SEND_ADD_NULL && $IS_SEND_PSW_NULL && $IS_RECE_ADD_NULL )); then
-        if [ $IS_SEND_ADD_NULL ]; then
-            echo "[INFO] - SENDER_ADDRESS null, will not send email"
-        fi
-        echo "[INFO] - SENDER_ADDRESS, SENDER_PASSWORD and RECEIVER_ADDRESS ok"
-    else
-        echo "[ERROR] - SENDER_ADDRESS, SENDER_PASSWORD and RECEIVER_ADDRESS must be all set to turn on email notification"
-        exit 1
-    fi
+#    if [ -z "$SENDER_ADDRESS" ]; then
+#	IS_SEND_ADD_NULL=true
+#    else
+#	IS_SEND_ADD_NULL=false
+#    fi
+#    
+#    if [ -z "$SENDER_PASSWORD" ]; then
+#	IS_SEND_PSW_NULL=true
+#    else
+#	IS_SEND_PSW_NULL=false
+#    fi
+#
+#    if [ -z "$" ]; then
+#	IS_RECE_ADD_NULL=true
+#    else
+#	IS_RECE_ADD_NULL=false
+#    fi
+#    
+#    if (( ! $IS_SEND_ADD_NULL && ! $IS_SEND_PSW_NULL && ! $IS_RECE_ADD_NULL ) || ( $IS_SEND_ADD_NULL && $IS_SEND_PSW_NULL && $IS_RECE_ADD_NULL )); then
+#        if [ $IS_SEND_ADD_NULL ]; then
+#            echo "[INFO] - SENDER_ADDRESS null, will not send email"
+#        fi
+#        echo "[INFO] - SENDER_ADDRESS, SENDER_PASSWORD and RECEIVER_ADDRESS ok"
+#    else
+#        echo "[ERROR] - SENDER_ADDRESS, SENDER_PASSWORD and RECEIVER_ADDRESS must be all set to turn on email notification"
+#        exit 1
+#    fi
 
     echo ""
     echo "[INFO] - Everything ok!"
