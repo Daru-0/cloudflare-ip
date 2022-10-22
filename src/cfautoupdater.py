@@ -76,7 +76,7 @@ def main():
 				print(f"[INFO] {now()} - Record \"{record['name']}\" IP change from {record['content']} to {current_ip}")
 				records_names += record['name'] + ', '
 		# Send email
-		if SENDER_ADDRESS & SENDER_PASSWORD & RECEIVER_ADDRESS:
+		if SENDER_ADDRESS and SENDER_PASSWORD and RECEIVER_ADDRESS:
 			print(f"[INFO] {now()} - Sending email...")
 			send_email(current_ip, records['result'][0]['content'], records_names[:-1])
 		# Wait before next check
