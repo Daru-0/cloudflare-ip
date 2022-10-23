@@ -24,13 +24,16 @@ def get_public_ip():
 	return current_ip_json
 
 # Send email
-def send_email(current_ip, record_ip, record_name):
+def send_email(email_body):
+	content = "The public IP of the following record(s) has changed:\n\n"
+	for record in email_body:
+		content + "\t" record + "\n"
 	try:
 		with yagmail.SMTP(SENDER_ADDRESS, SENDER_PASSWORD) as server:
 			server.send(
 				to=RECEIVER_ADDRESS,
 				subject="Public IP change",
-				contents=f"The public IP of the record(s) {record_name} has changed from {record_ip} to {current_ip}."
+				contents=content
 			)
 	except SMTPSenderRefused:
 		print(f"[ERROR] {now()} - Can't send email. The sender address is invalid.")
@@ -66,7 +69,7 @@ def main():
 			records = requests.get(CLOUDFLARE_URL + "?type=A", headers=header).json()
 		else:
 			records = requests.get(CLOUDFLARE_URL + f"/{RECORD_ID}", headers=header).json()
-		records_names = ""
+		email_body = []
 		for record in records['result']:
 			print(f"[INFO] {now()} - Record \"{record['name']}\" IP: {record['content']}")
 			# Change the IP using a PATCH request if the current IP is different from the one in the record
@@ -74,13 +77,13 @@ def main():
 				payload = {"content": current_ip}
 				requests.patch(CLOUDFLARE_URL + f"/{record['id']}", headers=header, data=json.dumps(payload))
 				print(f"[INFO] {now()} - Record \"{record['name']}\" IP change from {record['content']} to {current_ip}")
-				records_names += record['name'] + ', '
+				email_body.append(f"Record \"{record['name']}\" from {record['content']} to {current_ip}")
 		# Send email
 		if SENDER_ADDRESS and SENDER_PASSWORD and RECEIVER_ADDRESS:
 			print(f"[INFO] {now()} - Sending email...")
-			send_email(current_ip, records['result'][0]['content'], records_names[:-1])
+			send_email(email_body)
 		# Wait before next check
-		print(f"[INFO] {now()} - Wait {CHECK_INTERVAL} seconds before next check", end="\n-----")
+		print(f"[INFO] {now()} - Wait {CHECK_INTERVAL} seconds before next check", end="\n-----\n")
 		time.sleep(CHECK_INTERVAL)
 
 if __name__ == '__main__':
