@@ -27,7 +27,7 @@ def get_public_ip():
 def send_email(email_body):
 	content = "The public IP of the following record(s) has changed:\n\n"
 	for record in email_body:
-		content + "\t" record + "\n"
+		content = content + record + "\n"
 	try:
 		with yagmail.SMTP(SENDER_ADDRESS, SENDER_PASSWORD) as server:
 			server.send(
@@ -76,10 +76,10 @@ def main():
 			if record['content'] != current_ip:
 				payload = {"content": current_ip}
 				requests.patch(CLOUDFLARE_URL + f"/{record['id']}", headers=header, data=json.dumps(payload))
-				print(f"[INFO] {now()} - Record \"{record['name']}\" IP change from {record['content']} to {current_ip}")
+				print(f"[INFO] {now()} - Record \"{record['name']}\" updated to {current_ip}")
 				email_body.append(f"Record \"{record['name']}\" from {record['content']} to {current_ip}")
 		# Send email
-		if SENDER_ADDRESS and SENDER_PASSWORD and RECEIVER_ADDRESS:
+		if SENDER_ADDRESS and SENDER_PASSWORD and RECEIVER_ADDRESS and len(email_body) > 0:
 			print(f"[INFO] {now()} - Sending email...")
 			send_email(email_body)
 		# Wait before next check
