@@ -49,4 +49,5 @@ docker run -d \
 - [x] Add possibility to change more than one A record
 - [x] Check ENV validity in entrypoint.sh
 - [x] Add possibility to log changes via mail
+- [ ] Add possibility to update multiple domains
 - [ ] Easy standalone script that can run without a container
