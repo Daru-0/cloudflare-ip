@@ -72,5 +72,10 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
 - [ ] Use zone name instead of zone ID for better UX
 - [ ] Possibility to update multiple domains
 - [ ] Support for other SMTP servers other than Google's
+- [ ] Support for other notification systems
+  - [ ] Phone
+  - [ ] Telegram
+  - [ ] Discord
+  - [ ] Slack
 - [ ] Rewrite the script in GO because why not
 - [ ] Spport for other DNS services
