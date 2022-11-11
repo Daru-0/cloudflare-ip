@@ -1,53 +1,76 @@
-# Cloudflare DNS Auto IP Updater
+# Cloudflare DNS IP Updater
 
-This is a fork of the script [pigeonburger/cloudflare-ip](https://github.com/pigeonburger/cloudflare-ip). I added a Dockerfile to run the script inside an alpine container, which is very lightweight.
+If you have some self-hosted services exposed to the internet but not a static public IP, you certainly faced the annoying task to access the CloudFlare dashboard and manually change all your records with the new IP everytime it changes.
 
-The entrypoint will check if the environment variables have been correctly inputted.
+What if I tell you that it can be automated? With this simple script you just have to spin a Docker container and not worry about you IP changing anymore.
 
-The script will check the public IP every 24 hours and automatically update one (or all) of the A records' IP address if they are different.
+It will continuosly run and fetch your public IP at a given interval, detecting if it changes and sending a request to the CloudFlare API to update you records. You can even choose to be notified by email when that happens.
 
-Be aware, this only works if your content is on the Cloudflare CDN.
+This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/pigeonburger/cloudflare-ip), but it has been greatly improved and new features have been added. Also it runs in a docker container.
 
-## Requirements:
+> Be aware, this script only works if you are using the Cloudflare CDN.
+
+## Requirements
 
 - A CloudFlare account
 - Cloudflare Global API Key
 - ID of the Zone you want to change a record of
 - (optional) The ID of the A record you want to change ([how to](https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records))
 
-</br>
+## Installation
 
-## Installation:
+- Plain Docker
 
-```
-docker run -d \
-  -e EMAIL=<YOUR_CF_LOGIN_EMAIL> \
-  -e AUTH_KEY=<YOUR_API_KEY> \
-  -e ZONE_ID=<YOUR_ZONE_ID> \
-  daruzero/cfautoupdater:latest
-```
+  ```shell
+  docker run -d \
+    -e EMAIL=<YOUR_CF_LOGIN_EMAIL> \
+    -e AUTH_KEY=<YOUR_API_KEY> \
+    -e ZONE_ID=<YOUR_ZONE_ID> \
+    daruzero/cfautoupdater:latest
+  ```
 
-### Enviroment variables:
+- Docker Compose (download `.env.example` for the env file)
 
-(required) `ZONE_ID`: The ID of the zone you want to change a record of  
-(required) `EMAIL`: Email used for the CloudFlare registration  
-(required) `AUTH_KEY`: Your CloudFlare Global API Key  
-(optional) `RECORD_ID`: The ID of the record you want to change. Insert "none" to update all the A record of the zone (this is the default if not set)  
-(optional) `CHECK_INTERVAL`: The amount of seconds the script should wait between checks (default 86400)
+  ```yaml
+  version: '3.8'
 
-#### If you want to receieve a notification via email use these:
+  services:
+    app:
+      image: daruzero/cfautoupdater:latest
+      env_file: .env
+      restart: unless-stopped
+  ```
 
-(optional) `SENDER_ADDRESS`: The address of the email sender. Must be a Gmail address  
-(optional) `SENDER_PASSWORD`: The password to authenticate the sender. Use an application password ([tutorial](https://support.google.com/accounts/answer/185833?hl=en))  
-(optional) `RECEIVER_ADDRESS`: The address of the email receiver. Must be a Gmail address
+### Enviroment variables
+
+#### Required
+
+| Variable   | Example value                                 | Description                                           |
+| ---------- | --------------------------------------------- | ----------------------------------------------------- |
+| `EMAIL`    | johndoe@example.com                           | Email address associated with your CloudFlare account |
+| `AUTH_KEY` | c2547eb745079dac9320b638f5e225cf483cc5cfdda41 | Your CloudFlare Global API Key                        |
+| `ZONE_ID`  | 023e105f4ecef8ad9ca31a8372d0c353              | The ID of the zone you want to change the record of   |
+
+#### Optional
+
+| Variable           | Example value                    | Description                                                                                                                                | Default |
+| ------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| `RECORD_ID`        | 372e67954025e0ba6aaa6d586b9e0b59 | The ID of the record you want to change. Set to `none` to update all the A record of the zone                                              | `none`  |
+| `CHECK_INTERVAL`   | 86400                            | The amount of seconds the script should wait between checks                                                                                | `86400` |
+| `SENDER_ADDRESS`   | johndoe@example.com              | The address of the email sender. Must use Gmail SMTP server                                                                                | -       |
+| `SENDER_PASSWORD`  | supersecret                      | The password to authenticate the sender. Use an application password ([tutorial](https://support.google.com/accounts/answer/185833?hl=en)) | -       |
+| `RECEIVER_ADDRESS` | johndoe@example.com              | The address of the email receiver. Must use Gmail SMTP server                                                                              | -       |
 
 </br>
 
 ## Future implementation
 
-- [x] Add possibility to choose the amount of time between public IP's checks
-- [x] Add possibility to change more than one A record
+- [x] Possibility to choose the amount of time between public IP's checks
+- [x] Possibility to change more than one A record
 - [x] Check ENV validity in entrypoint.sh
-- [x] Add possibility to log changes via mail
-- [ ] Add possibility to update multiple domains
-- [ ] Easy standalone script that can run without a container
+- [x] Possibility to log changes via mail
+- [ ] Use zone name instead of zone ID for better UX
+- [ ] Possibility to update multiple domains
+- [ ] Support for other SMTP servers other than Google's
+- [ ] Rewrite the script in GO because why not
+- [ ] Spport for other DNS services
