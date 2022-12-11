@@ -14,7 +14,7 @@ AUTH_KEY = os.getenv('AUTH_KEY')
 RECORD_ID = os.getenv('RECORD_ID')
 CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL'))
 PUBLIC_IP_API_URL = "https://api.ipify.org?format=json"
-ZONE_NAME = os.getenv('ZONE_ID')
+ZONE_NAME = os.getenv('ZONE_NAME')
 CLOUDFLARE_URL = f"https://api.cloudflare.com/client/v4/zones/"
 SENDER_PASSWORD = os.getenv('SENDER_PASSWORD')
 SENDER_ADDRESS = os.getenv('SENDER_ADDRESS')
@@ -67,7 +67,7 @@ def send_email(email_body):
 
 # Get the zone ID
 def get_zone_id():
-	zone_id = requests.get(CLOUDFLARE_URL + f"?name={ZONE_NAME}", headers=HEADER).json()['result'][0]['id']
+	zone_id = requests.get(CLOUDFLARE_URL , params={'name': ZONE_NAME}, headers=HEADER).json()['result'][0]['id']
 	if not zone_id:
 		print(f"[ERROR] {now()} - Can't get zone ID. Check your zone name.")
 		exit(1)
