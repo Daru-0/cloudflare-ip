@@ -1,18 +1,11 @@
 FROM python:3.7-alpine3.15
 
-COPY src/ /app
-
 WORKDIR /app
 
-RUN pip3 install requests yagmail
+COPY requirements.txt requirements.txt
 
-ENV ZONE_ID="" \
-    EMAIL="" \
-    AUTH_KEY="" \
-    RECORD_ID="" \
-    CHECK_INTERVAL=86400 \
-    SENDER_ADDRESS="" \
-    SENDER_PASSWORD="" \
-    RECEIVER_ADDRESS=""
+RUN pip3 install -r requirements.txt
 
-ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
+COPY src/ .
+
+CMD [ "python3", "main.py" ]
