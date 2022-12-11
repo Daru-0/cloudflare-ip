@@ -29,4 +29,4 @@ jobs:
           SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
           RECEIVER_ADDRESS: ${{ secrets.RECEIVER_ADDRESS }}
         run: |
-          python -m unittest discover -s tests
+          python -m unittest discover -t src -s tests
