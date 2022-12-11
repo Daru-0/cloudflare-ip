@@ -14,7 +14,7 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
 
 - A CloudFlare account
 - Cloudflare Global API Key
-- ID of the Zone you want to change a record of
+- The domain name you want to change the record of
 - (optional) The ID of the A record you want to change ([how to](https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records))
 
 ## Installation
@@ -25,11 +25,11 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
   docker run -d \
     -e EMAIL=<YOUR_CF_LOGIN_EMAIL> \
     -e AUTH_KEY=<YOUR_API_KEY> \
-    -e ZONE_ID=<YOUR_ZONE_ID> \
+    -e ZONE_NAME=<YOUR_ZONE_NAME> \
     daruzero/cfautoupdater:latest
   ```
 
-- Docker Compose (download `.env.example` for the env file)
+- Docker Compose (see `.env.example` for the env file)
 
   ```yaml
   version: '3.8'
@@ -61,6 +61,12 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
 | `SENDER_ADDRESS`   | johndoe@example.com              | The address of the email sender. Must use Gmail SMTP server                                                                                | -       |
 | `SENDER_PASSWORD`  | supersecret                      | The password to authenticate the sender. Use an application password ([tutorial](https://support.google.com/accounts/answer/185833?hl=en)) | -       |
 | `RECEIVER_ADDRESS` | johndoe@example.com              | The address of the email receiver. Must use Gmail SMTP server                                                                              | -       |
+
+> **Note:**
+>
+> - You only need to specify either `ZONE_ID` or `ZONE_NAME`. If you specify both, `ZONE_ID` will be used.
+>
+> - `SENDER_ADDRESS` and `RECEIVER_ADDRESS` can be the same.
 
 </br>
 
