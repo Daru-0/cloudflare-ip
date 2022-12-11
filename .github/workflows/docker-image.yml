@@ -7,11 +7,6 @@ on:
     tags:
       - 'v*'
   pull_request:
-    branches:
-      - "main"
-    
-env:
-  IMAGE_NAME: cfautoupdater
 
 jobs:
 
@@ -31,10 +26,9 @@ jobs:
         flavor: |
           latest=auto
         tags: |
-          type=ref,event=branch
-          type=ref,event=pr
           type=semver,pattern={{version}}
           type=semver,pattern={{major}}.{{minor}}
+          type=raw,value=testing,enable=${{ startsWith(github.ref, 'refs/heads/') }}
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2 
