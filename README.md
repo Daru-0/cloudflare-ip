@@ -45,16 +45,17 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
 
 #### Required
 
-| Variable   | Example value                                 | Description                                           |
-| ---------- | --------------------------------------------- | ----------------------------------------------------- |
-| `EMAIL`    | johndoe@example.com                           | Email address associated with your CloudFlare account |
-| `AUTH_KEY` | c2547eb745079dac9320b638f5e225cf483cc5cfdda41 | Your CloudFlare Global API Key                        |
-| `ZONE_ID`  | 023e105f4ecef8ad9ca31a8372d0c353              | The ID of the zone you want to change the record of   |
+| Variable    | Example value                                 | Description                                           |
+| ----------- | --------------------------------------------- | ----------------------------------------------------- |
+| `EMAIL`     | johndoe@example.com                           | Email address associated with your CloudFlare account |
+| `AUTH_KEY`  | c2547eb745079dac9320b638f5e225cf483cc5cfdda41 | Your CloudFlare Global API Key                        |
+| `ZONE_NAME` | example.com                                   | The domain name that you want to change the record of |
 
 #### Optional
 
 | Variable           | Example value                    | Description                                                                                                                                | Default |
 | ------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| `ZONE_ID`          | 372e67954025e0ba6aaa6d586b9e0b59 | The ID of the zone you want to change a record of                                                                                          | -       |
 | `RECORD_ID`        | 372e67954025e0ba6aaa6d586b9e0b59 | The ID of the record you want to change. Set to `none` to update all the A record of the zone                                              | `none`  |
 | `CHECK_INTERVAL`   | 86400                            | The amount of seconds the script should wait between checks                                                                                | `86400` |
 | `SENDER_ADDRESS`   | johndoe@example.com              | The address of the email sender. Must use Gmail SMTP server                                                                                | -       |
@@ -69,7 +70,7 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
 - [x] Possibility to change more than one A record
 - [x] Check ENV validity in entrypoint.sh
 - [x] Possibility to log changes via mail
-- [ ] Use zone name instead of zone ID for better UX
+- [x] Use zone name instead of zone ID for better UX
 - [ ] Possibility to update multiple domains
 - [ ] Support for other SMTP servers other than Google's
 - [ ] Support for other notification systems
