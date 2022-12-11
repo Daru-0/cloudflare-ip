@@ -15,6 +15,7 @@ RECORD_ID = os.getenv('RECORD_ID')
 CHECK_INTERVAL = int(os.getenv('CHECK_INTERVAL'))
 PUBLIC_IP_API_URL = "https://api.ipify.org?format=json"
 ZONE_NAME = os.getenv('ZONE_NAME')
+ZONE_ID = os.getenv('ZONE_ID')
 CLOUDFLARE_URL = f"https://api.cloudflare.com/client/v4/zones/"
 SENDER_PASSWORD = os.getenv('SENDER_PASSWORD')
 SENDER_ADDRESS = os.getenv('SENDER_ADDRESS')
@@ -76,7 +77,10 @@ def get_zone_id():
 
 
 def main():
-	zone_id = get_zone_id()
+	if ZONE_ID:
+		zone_id = ZONE_ID
+	else:
+		zone_id = get_zone_id()
 	# Looping forever
 	while True:
 		current_ip = get_public_ip().json()['ip']
