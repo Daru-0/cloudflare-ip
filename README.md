@@ -70,13 +70,12 @@ This is a fork of the script at [pigeonburger/cloudflare-ip](https://github.com/
 - [x] Possibility to change more than one A record
 - [x] Check ENV validity in entrypoint.sh
 - [x] Possibility to log changes via mail
-- [x] Use zone name instead of zone ID for better UX
-- [ ] Possibility to update multiple domains
-- [ ] Support for other SMTP servers other than Google's
+- [x] [Use zone name instead of zone ID for better UX](https://github.com/DaruZero/cloudflare-dns-auto-updater/issues/6)
+- [ ] [Possibility to update multiple domains](https://github.com/DaruZero/cloudflare-dns-auto-updater/issues/7)
+- [ ] [Support for other SMTP servers other than Google's](https://github.com/DaruZero/cloudflare-dns-auto-updater/issues/8)
 - [ ] Support for other notification systems
   - [ ] Phone
   - [ ] Telegram
   - [ ] Discord
   - [ ] Slack
-- [ ] Rewrite the script in GO because why not
 - [ ] Spport for other DNS services
