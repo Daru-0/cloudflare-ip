@@ -28,10 +28,7 @@ class Cloudflare:
         else:
             self.zone_id = self.get_zone_id()
 
-        if (cfg.record_id is not None):
-            self.records = [cfg.record_id]
-        else:
-            self.records = self.get_records()
+        self.records = self.get_records()
 
     def get_public_ip(self):
         """Get the public IP of the server."""
@@ -52,7 +49,7 @@ class Cloudflare:
     def get_zone_id(self):
         """Get the zone ID."""
 
-        logging.info(f"Getting zone ID...")
+        logging.info(f"Getting zone ID for '{self.cfg.zone_name}'...")
         response = requests.get(CLOUDFLARE_URL , params={'name': self.cfg.zone_name}, headers=self.header)
 
         if response.status_code != 200:
@@ -67,6 +64,7 @@ class Cloudflare:
     def get_records(self):
         """Get the records of the zone."""
 
+        logging.info(f"Getting records...")
         response = requests.get(CLOUDFLARE_URL + self.zone_id + "/dns_records", headers=self.header)
 
         if response.status_code != 200:
@@ -74,15 +72,25 @@ class Cloudflare:
             exit(1)
 
         records = response.json()['result']
-        logging.info(f"Records for '{self.cfg.zone_name}': {records}")
+
+        if (self.cfg.record_id != 'none'):
+            logging.debug(f"Filtering records by ID '{self.cfg.record_id}'...")
+            given_record = self.get_obj_by_attr(records, 'id', self.cfg.record_id)
+            if given_record is None:
+                logging.error(f"Can't find record with ID '{self.cfg.record_id}'")
+                exit(1)
+            records = [self.get_obj_by_attr(records, 'id', self.cfg.record_id)]
+
+        logging.debug(f"Records for '{self.cfg.zone_name}': {records}")
+        logging.info(f"Found {len(records)} records.")
 
         return records
 
     def update_records(self):
         """Update the records of the zone."""
 
-        updated_records = List[str]
-        previous_ip: str
+        updated_records = []
+        previous_ip = "" 
 
         for record in self.records:
             if record['type'] == 'A':
@@ -99,7 +107,7 @@ class Cloudflare:
                     logging.info(f"Record '{record['name']}' updated.")
                     updated_records.append(record['name'])
                     previous_ip = record['content']
+                else:
+                    logging.info(f"Record '{record['name']}' is up to date.")
 
-                logging.info(f"Record '{record['name']}' is up to date.")
-        
         return updated_records, previous_ip

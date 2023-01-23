@@ -21,6 +21,7 @@ class Notification:
     def send_email(self, records: List[str], previous_ip: str, current_ip: str):
         content = f'The public IP of the following record(s) has changed from {previous_ip} to {current_ip}:\n\n'
         for record in records:
+            logging.debug(f"Record: {record}")
             content = content + "- " + record + "\n"
         try:
             self.smtp.send(
@@ -28,6 +29,7 @@ class Notification:
                 subject="Public IP change",
                 contents=content
             )
+            logging.info(f"Email sent.")
         except SMTPSenderRefused:
             logging.error(f"Can't send email. The sender address is invalid.")
         except SMTPAuthenticationError:
@@ -36,5 +38,3 @@ class Notification:
             logging.error(f"Can't send email. Check your receiver address.")
         except SMTPConnectError:
             logging.error(f"Can't send email. Check your internet connection.")
-        finally:
-            logging.info(f"Email sent.")
