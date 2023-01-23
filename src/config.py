@@ -20,6 +20,8 @@ class Config(object):
         logging.debug(f"Sender password: {self.sender_password}")
         self.zone_id = utils.get_env("ZONE_ID", required=False)
         logging.debug(f"Zone ID: {self.zone_id}")
-        if (self.zone_id is None):
-            self.zone_name = utils.get_env("ZONE_NAME", required=True)
-            logging.debug(f"Zone name: {self.zone_name}")
+        self.zone_name = utils.get_env("ZONE_NAME", required=False)
+        logging.debug(f"Zone name: {self.zone_name}")
+        if (self.zone_id is None and self.zone_name is None):
+            logging.fatal("Either ZONE_ID or ZONE_NAME must be set")
+            exit(1)
