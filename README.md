@@ -1,3 +1,7 @@
+# Deprecation notice
+
+As of 2022-04-12 this repository has been deprecated in favor of [cloudflare-dns-auto-updater-go](https://github.com/DaruZero/cloudflare-dns-auto-updater-go), which is a Go port of the code, with new functionalities and improved performance.
+
 # Cloudflare DNS IP Updater
 
 If you have some self-hosted services exposed to the internet but not a static public IP, you certainly faced the annoying task to access the CloudFlare dashboard and manually change all your records with the new IP everytime it changes.
