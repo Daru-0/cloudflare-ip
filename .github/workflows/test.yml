@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        shell: bash
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          AUTH_KEY: ${{ secrets.AUTH_KEY }}
+          ZONE_NAME: ${{ secrets.ZONE_NAME }}
+          RECORD_ID: ${{ secrets.RECORD_ID }}
+          CHECK_INTERVAL: ${{ secrets.CHECK_INTERVAL }}
+          SENDER_ADDRESS: ${{ secrets.SENDER_ADDRESS }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          RECEIVER_ADDRESS: ${{ secrets.RECEIVER_ADDRESS }}
+        run: |
+          python -m unittest discover -t src -s tests
